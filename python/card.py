@@ -1,6 +1,6 @@
 class Card:
-    def __init__ (self, suit, value, point_value):
-        self.suit = suit
+    def __init__ (self, value, point_value):
+        #self.suit = suit
         self.value = value
         self.point_value = point_value
 

@@ -2,7 +2,8 @@ class Player:
 
     __hand__ = []
     __hand_value__ = 0
-
+    playing_current_hand = True
+    busted = False
 
     def __init__(self, hand, aggression_level):      
         self.aggression_level = aggression_level
@@ -22,8 +23,18 @@ class Player:
         return self.hand_value
 
     def decision(self):
-        pass
+        if(playing_current_hand):
+            if(self.hand_value > self.aggression_level):
+                self.hit()
+            else:
+                self.playing_current_hand = False
+
 
     def hit(self, new_card):
         self.hand.append(new_card)
         self.update_hand_value()
+        if(self.hand_value > 21):
+            self.playing_current_hand = False
+            self.busted = True
+        else:
+            self.decision()
