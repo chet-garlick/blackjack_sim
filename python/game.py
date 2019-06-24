@@ -1,36 +1,92 @@
-from random import shuffle
+import random
+import Card
+import naive_player
+import dealer
 
 NUM_PLAYERS = 4
 LOW_AGGRESSION = 13
 VERY_LOW_AGGRESSION = 12
 MEDIUM_AGGRESSION = 14
 HIGH_AGGRESSION = 15
-VERY_AGGRESSION = 16
+VERY_HIGH_AGGRESSION = 16
+DEALER_AGGRESSION = 17
 NUM_DECKS_IN_SHOE = 6
 DECK_SIZE = 52
-
+NUM_SIMULATED_ROUNDS = 10
 SHOE = []
-
+PLAYERS = []
+DEALER = dealer.Dealer(DEALER_AGGRESSION) 
 def init_shoe():
     for i in range(NUM_DECKS_IN_SHOE):
         for j in range(52):
-            if( j < 4 ): card = Card('2',2)
-            elif( j >= 4 and j < 8): card = Card('3',3)
-            elif (j >=8 and j < 12): card = Card('4',4)
-            elif (j >=8 and j < 12): card = Card('5',5)            
-            elif (j >=8 and j < 12): card = Card('6',6)
-            elif (j >=8 and j < 12): card = Card('7',7)
-            elif (j >=8 and j < 12): card = Card('8',8)
-            elif (j >=8 and j < 12): card = Card('9',9)
-            elif (j >=8 and j < 12): card = Card('T',10) 
-            elif (j >=8 and j < 12): card = Card('J',10)
-            elif (j >=8 and j < 12): card = Card('Q',10)
-            elif (j >=8 and j < 12): card = Card('K',10)
-            elif (j >=8 and j < 12): card = Card('A',11)
+            if( j < 4 ): card = Card.Card('2',2)
+            elif( j >= 4 and j < 8): card = Card.Card('3',3)
+            elif (j >=8 and j < 12): card = Card.Card('4',4)
+            elif (j >=8 and j < 12): card = Card.Card('5',5)            
+            elif (j >=8 and j < 12): card = Card.Card('6',6)
+            elif (j >=8 and j < 12): card = Card.Card('7',7)
+            elif (j >=8 and j < 12): card = Card.Card('8',8)
+            elif (j >=8 and j < 12): card = Card.Card('9',9)
+            elif (j >=8 and j < 12): card = Card.Card('T',10) 
+            elif (j >=8 and j < 12): card = Card.Card('J',10)
+            elif (j >=8 and j < 12): card = Card.Card('Q',10)
+            elif (j >=8 and j < 12): card = Card.Card('K',10)
+            elif (j >=8 and j < 12): card = Card.Card('A',11)
 
             SHOE.append(card) 
-            SHOE.shuffle()
+            
+    random.shuffle(SHOE)
 
+
+def first_round():
+
+    for i in range( NUM_PLAYERS ) :
+
+        tmp_hand = []
+        tmp_hand.append(SHOE.pop())
+        tmp_hand.append(SHOE.pop())
+        player = naive_player.Player(tmp_hand, MEDIUM_AGGRESSION)
+        PLAYERS.append(player)
+
+    tmp_hand = []
+    tmp_hand.append(SHOE.pop())
+    tmp_hand.append(SHOE.pop())
+    #dealer = dealer.Dealer(tmp_hand, DEALER_AGGRESSION)
+    dealer.new_hand(dealer_hand)
 
 def new_round():
-    pass
+    #DEAL HANDS
+    for p in PLAYERS:
+        tmp_hand = []
+        tmp_hand.append(SHOE.pop())
+        tmp_hand.append(SHOE.pop())
+        p.new_hand(tmp_hand)
+        
+
+    dealer_hand = []
+    dealer_hand.append(SHOE.pop())
+    dealer_hand.append(SHOE.pop())
+    dealer.new_hand(dealer_hand)
+
+    #GAME LOOP
+    for p in PLAYERS:
+        p.decision()
+
+    dealer.decision()
+
+    if(dealer.is_busted()):
+        for p in PLAYERS:
+            p.wins+=1            
+
+
+init_shoe()
+first_round()
+for i in range(NUM_SIMULATED_ROUNDS):
+    new_round()
+for j in range(NUM_PLAYERS):
+    print("player " + str(j) + " won " + str(PLAYERS[j].wins) + " rounds.")
+
+print("The dealer won " + str(dealer.wins) + " rounds.")
+
+
+
