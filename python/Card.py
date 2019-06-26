@@ -6,6 +6,3 @@ class Card:
     def get_point_value(self):
         return self.point_value
 
-
-card = Card('2',2)
-print(card.get_point_value())
