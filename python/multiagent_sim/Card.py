@@ -6,3 +6,6 @@ class Card:
     def get_point_value(self):
         return self.point_value
 
+    def get_face_value(self):
+        return self.value
+

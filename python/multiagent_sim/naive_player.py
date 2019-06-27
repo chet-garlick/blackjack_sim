@@ -12,6 +12,8 @@ class Player:
         self.update_hand_value()
 
     def new_hand(self, new_hand):
+        self.playing_current_hand = True
+        self.busted = False
         self.hand = new_hand
         self.update_hand_value()
 
@@ -25,11 +27,14 @@ class Player:
 
     def decision(self):
         if(self.playing_current_hand):
-            if(self.hand_value > self.aggression_level):
-                self.hit()
+            if(self.hand_value < self.aggression_level):
+                #self.hit()
+                return True
             else:
                 self.playing_current_hand = False
-
+                return False
+        else:
+            return False
 
     def hit(self, new_card):
         self.hand.append(new_card)

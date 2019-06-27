@@ -14,7 +14,7 @@ VERY_HIGH_AGGRESSION = 16
 DEALER_AGGRESSION = 17
 NUM_DECKS_IN_SHOE = 6
 DECK_SIZE = 52
-NUM_SIMULATED_ROUNDS = 1000000
+NUM_SIMULATED_ROUNDS = 10000
 SHOE = []
 PLAYERS = []
 DEALER = dealer.Dealer(DEALER_AGGRESSION) 
@@ -79,18 +79,25 @@ def new_round(SHOE):
 
     #GAME LOOP
     for p in PLAYERS:
-        p.decision()
+        if ( p.decision() ):
+            p.hit(SHOE.pop())
 
     DEALER.decision()
 
     if(DEALER.is_busted()):
         for p in PLAYERS:
-            p.wins+=1
+            if(not p.is_busted()):
+                p.wins+=1
+            else:
+                DEALER.wins += 1
     else:
         for p in PLAYERS:
-            if ( p.get_hand_value() > DEALER.get_hand_value() ):
-                p.wins+=1
-            elif ( p.get_hand_value() < DEALER.get_hand_value() ):
+            if(not p.is_busted()):
+                if ( p.get_hand_value() > DEALER.get_hand_value() ):
+                    p.wins+=1
+                elif ( p.get_hand_value() < DEALER.get_hand_value() ):
+                    DEALER.wins+=1
+            else:
                 DEALER.wins+=1
 
 
@@ -108,7 +115,7 @@ def main():
 
     print("The dealer won " + str(DEALER.wins) + " rounds.")
     end = time.time()
-    print(end - start)
+    print(str( end - start ) + " seconds elapsed for this simulation.")
 
 
 main()
