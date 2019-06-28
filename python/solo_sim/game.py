@@ -4,6 +4,8 @@ import random
 deck = []
 player_hand = []
 dealer_hand = []
+
+
 def create_deck():
     new_deck = []
     for j in range(52):
@@ -23,11 +25,10 @@ def create_deck():
 
         new_deck.append(card) 
             
-    #for i in range(52):
-    #    print(new_deck[i].get_face_value())
     random.shuffle(new_deck)
 
     return new_deck
+
 
 def new_hand(deck,player_hand, dealer_hand):
 
@@ -35,23 +36,36 @@ def new_hand(deck,player_hand, dealer_hand):
     deck = create_deck()
 
     player_hand.clear()
+    dealer_hand.clear() 
     player_hand.append( deck.pop() )
+    dealer_hand.append( deck.pop() ) 
     player_hand.append( deck.pop() )
-
-    dealer_hand.clear()
     dealer_hand.append( deck.pop() )
-    dealer_hand.append( deck.pop() )
-
-    game_state = player_decision(player_hand,deck)
+    
+    game_state = player_decision(player_hand,dealer_hand[1],deck)
     player_hand = game_state[0]
     player_score = score_hand(player_hand)
     
     if(not player_score > 21):
         deck = game_state[1]
-        dealer_score = dealer_decision(dealer_hand,player_score, deck)
+        dealer_state = dealer_decision(dealer_hand,player_score, deck)
+        dealer_score = dealer_state[0]
+        dealer_hand = dealer_state[1]
 
-    
+        
+        print("The dealer's hand was: ")
+        for c in dealer_hand:
+            print(c.get_face_value())
 
+        if(dealer_score > 21):
+            print("You win, the dealer busted.")
+ 
+        elif(dealer_score > player_score):  
+            print("You lose, the dealer was closer to 21.")
+        elif(dealer_score < player_score):
+            print("You win, you were closer to 21.")
+        elif(dealer_score == player_score):
+            print("You push, you and the dealer had an equal score,")
 
 def score_hand(hand):
     score = 0
@@ -59,10 +73,14 @@ def score_hand(hand):
         score += c.get_point_value()
     return score
 
-def player_decision(hand,deck):
+
+def player_decision(hand,dealer_show_card,deck):
     playing = True
+    print("The dealer is showing a " + dealer_show_card.get_face_value())
+ 
+    print("Your hand is: ")
     for i in range(len(hand)):
-        print("Card number " + str(i) + " is " + hand[i].get_face_value())
+        print(hand[i].get_face_value())
     
     hit = hit_prompt()
     if(hit):
@@ -71,7 +89,7 @@ def player_decision(hand,deck):
             print("You busted. You lose.")
             print("Your bust card was: " + hand[len(hand) - 1].get_face_value())
         else:
-            player_decision(hand,deck)
+            player_decision(hand,dealer_show_card,deck)
     else:
         playing = False
 
@@ -80,7 +98,7 @@ def player_decision(hand,deck):
 
 def hit_prompt():
     print("Do you want to hit?")
-    hit = input("Y/N")
+    hit = input("Y/N \n")
     if (hit == "N" or hit == "n"):
         return False
     elif (hit == "Y" or hit == 'y'):
@@ -89,10 +107,9 @@ def hit_prompt():
         return hit_prompt()
 
 
-
 def play_again_prompt():
     print("Do you want to play again?")
-    play_again = input("Y/N")
+    play_again = input("Y/N \n")
     if (play_again == "N" or play_again == "n"):
         return False
     elif (play_again == "Y" or play_again == 'y'):
@@ -101,20 +118,21 @@ def play_again_prompt():
     else:
         return play_again_prompt()
 
-#def dealer_decision():
 
 def dealer_decision(d_hand, p_score, deck):
     dealer_score = 0
 
     dealer_score = score_hand(d_hand)
-    
-    
+    still_playing = True
+    dealer_wins = False
+    while(dealer_score < 17 and still_playing):
+        if(dealer_score > p_score):
+            still_playing = False
+        else:
+            d_hand.append(deck.pop())
+            dealer_score = score_hand(d_hand)
 
-    while(dealer_score < 17):
-        d_hand.append(deck.pop())
-        dealer_score = score_hand(d_hand)
-
-    return dealer_score
+    return (dealer_score, d_hand)
 
 
 def main():
@@ -128,6 +146,8 @@ def main():
             
 
 main()
+
+
 
 
 
