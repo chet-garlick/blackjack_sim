@@ -69,8 +69,20 @@ def new_hand(deck,player_hand, dealer_hand):
 
 def score_hand(hand):
     score = 0
+    has_high_ace = False
     for c in hand:
         score += c.get_point_value()
+        if(c.get_point_value() == 11):
+            has_high_ace = True
+
+    if(score > 21 and has_high_ace):
+        for c in hand:
+            if (c.get_point_value() == 11):
+                c.swap_ace_value()
+                score = score - 10
+                break
+
+
     return score
 
 
