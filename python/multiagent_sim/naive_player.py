@@ -4,6 +4,7 @@ class Player:
     hand_value = 0
     playing_current_hand = True
     busted = False
+    result = ""
     wins = 0
 
     def __init__(self, hand, aggression_level):      
@@ -60,3 +61,14 @@ class Player:
 
     def is_busted(self):
         return self.busted
+
+    def get_result(self):
+        return self.result
+
+    def set_result(self, new_res):
+        self.result = new_res
+
+    def hand_to_string(self):
+        str_hand = ""
+        for c in self.hand:
+            str_hand.append(c.get_face_value())
