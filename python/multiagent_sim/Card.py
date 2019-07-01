@@ -8,4 +8,8 @@ class Card:
 
     def get_face_value(self):
         return self.value
+    
+    def swap_ace_value(self):
+        if(Card.get_face_value == "A"):
+            self.point_value = 1
 

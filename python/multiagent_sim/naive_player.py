@@ -11,6 +11,9 @@ class Player:
         self.hand = hand
         self.update_hand_value()
 
+    def __init__(self, aggression_level):
+        self.aggression_level = aggression_level
+
     def new_hand(self, new_hand):
         self.playing_current_hand = True
         self.busted = False
@@ -19,8 +22,18 @@ class Player:
 
     def update_hand_value(self):
         self.hand_value = 0
+        has_high_ace = False
         for card in self.hand:
             self.hand_value += card.get_point_value()
+            if(card.get_point_value() == 11):
+                has_high_ace = True
+
+        if(self.hand_value > 21 and has_high_ace):
+            for c in hand:
+                if (c.get_point_value() == 11):
+                    c.swap_ace_value()
+                    self.hand_value = self.hand_value - 10
+                    break
 
     def get_hand_value(self):
         return self.hand_value
