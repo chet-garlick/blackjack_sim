@@ -157,9 +157,13 @@ def main():
         playing = play_again_prompt()
             
 
+def hand_to_string(hand):
+    output = ""
+    for c in hand:
+        output += c.get_face_value()
+    return output
+
 main()
-
-
 
 
 
