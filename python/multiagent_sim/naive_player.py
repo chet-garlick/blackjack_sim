@@ -30,7 +30,7 @@ class Player:
                 has_high_ace = True
 
         if(self.hand_value > 21 and has_high_ace):
-            for c in hand:
+            for c in self.hand:
                 if (c.get_point_value() == 11):
                     c.swap_ace_value()
                     self.hand_value = self.hand_value - 10
@@ -69,6 +69,8 @@ class Player:
         self.result = new_res
 
     def hand_to_string(self):
-        str_hand = ""
+        str_hand = " "
         for c in self.hand:
-            str_hand.append(c.get_face_value())
+            str_hand += c.get_face_value()
+        str_hand += "  "
+        return str_hand
