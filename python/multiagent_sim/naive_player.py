@@ -74,3 +74,6 @@ class Player:
             str_hand += c.get_face_value()
         str_hand += "  "
         return str_hand
+
+    def get_playing(self):
+        return self.playing_current_hand

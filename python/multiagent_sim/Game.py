@@ -61,11 +61,13 @@ class Game:
         self.dealer.new_hand(dealer_hand)
 
         for p in self.players:
-            if(p.decision()):
-                p.hit(self.shoe.pop())
+            while(p.get_playing()):
+                if(p.decision()):
+                    p.hit(self.shoe.pop())
 
-        if(self.dealer.decision()):
-            self.dealer.hit(self.shoe.pop())
+        while(self.dealer.get_playing()):
+            if(self.dealer.decision()):
+                self.dealer.hit(self.shoe.pop())
 
         if(self.dealer.is_busted()):
             for play in self.players:
